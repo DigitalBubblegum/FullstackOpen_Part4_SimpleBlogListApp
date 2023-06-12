@@ -23,16 +23,6 @@ mongoose
     console.log("error connecting to MongoDB:", error.message);
   });
 
-  // const blog = new Blog({
-  //   title: 'MongoDB world',
-  //   author: 'MongoDB Team',
-  //   url: 'http://mongodbworld.com',
-  //   likes: 500000,
-  // });
-  // blog.save().then((result) => {
-  //   console.log("note saved!");
-  //   mongoose.connection.close();
-  // });
 app.use(cors())
 app.use(express.json())
 
