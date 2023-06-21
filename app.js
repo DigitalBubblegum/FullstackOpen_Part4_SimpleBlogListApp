@@ -8,7 +8,7 @@ const mongoose = require('mongoose')
 
 mongoose.set('strictQuery',false)
 
-logger.info("connecting to ", process.env.MONGODB_URI);
+logger.info("connecting to ", config.mongoUrl);
 mongoose
   .connect(config.mongoUrl)
   .then(() => {
