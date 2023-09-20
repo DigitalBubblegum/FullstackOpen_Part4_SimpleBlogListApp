@@ -2,7 +2,40 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
-
+const Blog = require('../models/blog')
+//inital values
+const initialBlogs = [
+  {
+    title: "MongoDB world",
+    author: "MongoDB Team",
+    url: "http://mongodbworld.com",
+    likes: 500000,
+    id: "648410f8925e64e969248c9f",
+  },
+  {
+    title: "MongoDB friends",
+    author: "MongoDB friends team",
+    url: "http://mongodbfriends.com",
+    likes: 456677,
+    id: "649285ec5465feade00c05ab",
+  },
+  {
+    title: "MongoDB friends",
+    author: "MongoDB friends team",
+    url: "http://mongodbfriends.com",
+    likes: 456677,
+    id: "65085725168f9b93d80a925c",
+  },
+]
+beforeEach(async()=>{
+    await Blog.deleteMany({});
+    let blogObject = new Blog(initialBlogs[0]);
+    await blogObject.save();
+    blogObject = new Blog(initialBlogs[1]);
+    await blogObject.save();
+    blogObject = new Blog(initialBlogs[2]);
+    await blogObject.save();
+},100000)
 test ('api returns json',
     async() =>{
         await api.get('/api/blogs').expect(200).expect('Content-Type',/application\/json/)
