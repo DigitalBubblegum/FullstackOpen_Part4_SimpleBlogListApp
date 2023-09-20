@@ -1,4 +1,14 @@
 const favshelper = require('../utils/list_helper')
+var resultBiglist = {
+  title: "Canonical string reduction",
+  author: "Edsger W. Dijkstra",
+  likes: 12,
+};
+var resultSmlList = {
+  title: "Go To Statement Considered Harmful",
+  author: "Edsger W. Dijkstra",
+  likes: 5,
+};
 describe('maximum likes',() => {
       const listWithOneBlog = [
         {
@@ -67,10 +77,10 @@ describe('maximum likes',() => {
       });
         test("when list has only one blog, max likes is", () => {
           const result = favshelper.favoriteBlog(listWithOneBlog);
-          expect(result).toEqual(5);
+          expect(result).toEqual(resultSmlList);
         });
         test("when the list has many blogs max like is", () => {
           const result = favshelper.favoriteBlog(blogs);
-          expect(result).toEqual(12);
+          expect(result).toEqual(resultBiglist);
         });
 })

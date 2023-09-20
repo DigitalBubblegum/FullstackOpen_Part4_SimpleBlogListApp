@@ -17,8 +17,13 @@ const favoriteBlog = (blogs) => {
   const maxBlog = blogs.reduce((maxi, blog) =>
     blog.likes > maxi.likes ? blog : maxi
   );
-
-  return maxBlog.likes;
+  var retu = {
+    title:  maxBlog.title,
+    author: maxBlog.author,
+    likes: maxBlog.likes
+  };
+  // return maxBlog.likes;
+  return retu
 };
 
 module.exports = {
