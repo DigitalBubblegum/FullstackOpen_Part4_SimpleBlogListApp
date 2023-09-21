@@ -10,21 +10,18 @@ const initialBlogs = [
     author: "MongoDB Team",
     url: "http://mongodbworld.com",
     likes: 500000,
-    id: "648410f8925e64e969248c9f",
   },
   {
     title: "MongoDB friends",
     author: "MongoDB friends team",
     url: "http://mongodbfriends.com",
     likes: 456677,
-    id: "649285ec5465feade00c05ab",
   },
   {
     title: "MongoDB friends",
     author: "MongoDB friends team",
     url: "http://mongodbfriends.com",
     likes: 456677,
-    id: "65085725168f9b93d80a925c",
   },
 ]
 beforeEach(async()=>{
@@ -59,6 +56,20 @@ test('a specific note is within the returned notes',async()=>{
   const response = await api.get('/api/blogs')
   const titles  = response.body.map(r => r.title)
   expect(titles).toContain("MongoDB world");
+})
+//proper api testing
+test('a valid note can be added', async()=>{
+  const newBlog = {
+    title: "Learners Planet",
+    author: "Anonymous",
+    url: "http://learners-planet.com",
+    likes: 5000,
+  }
+  await api.post('/api/blogs').send(newBlog).expect(201).expect('Content-Type',/application\/json/)
+  const response = await api.get('/api/blogs')
+  const titles = response.body.map(r=>r.title)
+  expect(response.body).toHaveLength(initialBlogs.length+1)
+  expect(titles).toContain('Learners Planet')
 })
 afterAll(async()=>{
     await mongoose.connection.close();
