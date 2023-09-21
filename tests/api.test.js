@@ -1,36 +1,16 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
+const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
-//inital values
-const initialBlogs = [
-  {
-    title: "MongoDB world",
-    author: "MongoDB Team",
-    url: "http://mongodbworld.com",
-    likes: 500000,
-  },
-  {
-    title: "MongoDB friends",
-    author: "MongoDB friends team",
-    url: "http://mongodbfriends.com",
-    likes: 456677,
-  },
-  {
-    title: "MongoDB friends",
-    author: "MongoDB friends team",
-    url: "http://mongodbfriends.com",
-    likes: 456677,
-  },
-]
 beforeEach(async()=>{
     await Blog.deleteMany({});
-    let blogObject = new Blog(initialBlogs[0]);
+    let blogObject = new Blog(helper.initialBlogs[0]);
     await blogObject.save();
-    blogObject = new Blog(initialBlogs[1]);
+    blogObject = new Blog(helper.initialBlogs[1]);
     await blogObject.save();
-    blogObject = new Blog(initialBlogs[2]);
+    blogObject = new Blog(helper.initialBlogs[2]);
     await blogObject.save();
 },100000)
 test ('api returns json',
@@ -50,15 +30,15 @@ test('api returns 0th blog as MongoDB world',
 test('all notes are returned',async()=>{
   const response = await api.get('/api/blogs')
 
-  expect(response.body).toHaveLength(initialBlogs.length)
+  expect(response.body).toHaveLength(helper.initialBlogs.length)
 },100000)
 test('a specific note is within the returned notes',async()=>{
   const response = await api.get('/api/blogs')
   const titles  = response.body.map(r => r.title)
   expect(titles).toContain("MongoDB world");
 })
-//Test to see if a valid note can be added to the DB via GET
-test('a valid note can be added', async()=>{
+//Test to see if a valid blog can be added to the DB via GET
+test('a valid blog can be added', async()=>{
   const newBlog = {
     title: "Learners Planet",
     author: "Anonymous",
@@ -66,20 +46,23 @@ test('a valid note can be added', async()=>{
     likes: 5000,
   }
   await api.post('/api/blogs').send(newBlog).expect(201).expect('Content-Type',/application\/json/)
-  const response = await api.get('/api/blogs')
-  const titles = response.body.map(r=>r.title)
-  expect(response.body).toHaveLength(initialBlogs.length+1)
+
+
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
+
+  const titles = blogsAtEnd.map(r=>r.title)
   expect(titles).toContain('Learners Planet')
 })
 
-//test to see if an invalid note cannot be added to the DB via GET
-test('note without content is not added',async()=>{
+//test to see if an invalid blog cannot be added to the DB via GET
+test('blog without content is not added',async()=>{
   const newBlog = {
     likes: 500000,
   }
   await api.post('/api/blogs').send(newBlog).expect(400)
-  const response = await api.get('/api/blogs')
-  expect(response.body).toHaveLength(initialBlogs.length)
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
 },100000)
 afterAll(async()=>{
     await mongoose.connection.close();
