@@ -12,8 +12,11 @@ blogsRouter.get('/', async (request, response) => {
 blogsRouter.post('/', (request, response) => {
   const blog = new Blog(request.body);
 
-  blog.save().then((result) => {
-    response.status(201).json(result);
-  });
+  if (blog.title===undefined||blog.author===undefined||blog.url===undefined||blog.likes===undefined) {
+    return response.status(400).json({error: "content missing",});
+  }
+    blog.save().then((result) => {
+      response.status(201).json(result);
+    });
 });
 module.exports = blogsRouter;

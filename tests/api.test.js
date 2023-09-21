@@ -57,7 +57,7 @@ test('a specific note is within the returned notes',async()=>{
   const titles  = response.body.map(r => r.title)
   expect(titles).toContain("MongoDB world");
 })
-//proper api testing
+//Test to see if a valid note can be added to the DB via GET
 test('a valid note can be added', async()=>{
   const newBlog = {
     title: "Learners Planet",
@@ -71,6 +71,16 @@ test('a valid note can be added', async()=>{
   expect(response.body).toHaveLength(initialBlogs.length+1)
   expect(titles).toContain('Learners Planet')
 })
+
+//test to see if an invalid note cannot be added to the DB via GET
+test('note without content is not added',async()=>{
+  const newBlog = {
+    likes: 500000,
+  }
+  await api.post('/api/blogs').send(newBlog).expect(400)
+  const response = await api.get('/api/blogs')
+  expect(response.body).toHaveLength(initialBlogs.length)
+},100000)
 afterAll(async()=>{
     await mongoose.connection.close();
 })
