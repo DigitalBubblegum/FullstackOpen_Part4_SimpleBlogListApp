@@ -12,7 +12,11 @@ blogsRouter.post('/', async (request, response) => {
   if (blog.title===undefined||blog.author===undefined||blog.url===undefined||blog.likes===undefined) {
     return response.status(400).json({error: "content missing",});
   }
-    const savedBlog = await blog.save()
-    response.status(201).json(savedBlog)
+    try{
+      const savedBlog = await blog.save()
+      response.status(201).json(savedBlog)
+    }catch(exception){
+      next(exception)
+    }
 });
 module.exports = blogsRouter;
