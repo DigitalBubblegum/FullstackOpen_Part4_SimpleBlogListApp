@@ -50,6 +50,16 @@ test('api returns 0th blog as MongoDB world',
         const response = await api.get('/api/blogs')
         expect(response.body[0].title).toBe('MongoDB world')
 },100000)
+test('all notes are returned',async()=>{
+  const response = await api.get('/api/blogs')
+
+  expect(response.body).toHaveLength(initialBlogs.length)
+},100000)
+test('a specific note is within the returned notes',async()=>{
+  const response = await api.get('/api/blogs')
+  const titles  = response.body.map(r => r.title)
+  expect(titles).toContain("MongoDB world");
+})
 afterAll(async()=>{
     await mongoose.connection.close();
 })
