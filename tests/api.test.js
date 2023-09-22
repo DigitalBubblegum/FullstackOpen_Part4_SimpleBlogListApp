@@ -17,6 +17,11 @@ test ('api returns json',
       
         await api.get('/api/blogs').expect(200).expect('Content-Type',/application\/json/)
 },100000)
+//4.9
+test('verifies that the unique identifier property of the blog posts is named id', async() =>{
+    response = await api.get('/api/blogs')
+    expect(response.body[0].id).toBeDefined()
+})
 test('api returns 2 blogs',
     async()=>{
         const response = await api.get('/api/blogs')
