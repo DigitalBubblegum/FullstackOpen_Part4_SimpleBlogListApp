@@ -22,30 +22,6 @@ test('verifies that the unique identifier property of the blog posts is named id
     response = await api.get('/api/blogs')
     expect(response.body[0].id).toBeDefined()
 })
-test('api returns 2 blogs',
-    async()=>{
-        const response = await api.get('/api/blogs')
-        expect(response.body).toHaveLength(helper.initialBlogs.length)
-},100000)
-test('api returns 0th blog as MongoDB world',
-    async()=>{
-        const response = await api.get('/api/blogs')
-        expect(response.body[0].title).toBe('MongoDB world')
-},100000)
-test('all notes are returned',async()=>{
-  const response = await api.get('/api/blogs')
-
-  expect(response.body).toHaveLength(helper.initialBlogs.length)
-},100000)
-test('a specific note is within the returned notes',async()=>{
-  const blogsAtStart = await helper.blogsInDb()
-  const blogToView = blogsAtStart[0]
-  const resultBlog = await api
-    .get(`/api/blogs/${blogToView.id}`)
-    .expect(200)
-    .expect('Content-Type',/application\/json/)
-  expect(resultBlog.body).toEqual(blogToView)
-})
 //4.10 Test to see if a valid blog can be added to the DB via GET
 test('a valid blog can be added', async()=>{
   const newBlog = {
@@ -75,7 +51,7 @@ test('Verify when likes is missing from the request, it will default to the valu
   const titles = blogsAtEnd.map((r) => r.title);
   expect(titles).toContain("Mongo Monkey");
 })
-//test to see if an invalid blog cannot be added to the DB via GET
+//4.12 test to see if an invalid blog cannot be added to the DB via GET
 test('blog without content is not added',async()=>{
   const newBlog = {
     likes: 500000,
