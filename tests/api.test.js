@@ -68,6 +68,19 @@ test('blog without content is not added',async()=>{
   const blogsAtEnd = await helper.blogsInDb()
   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
 },100000)
+//test to see if a particular blog can be deleted
+test('a particular blog can be deleted',async()=>{
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToDelete = blogsAtStart[0]
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204)
+
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length-1)
+  const titles = blogsAtEnd.map((r) => r.title);
+  expect(titles).not.toContain(blogToDelete.title);
+})
 afterAll(async()=>{
     await mongoose.connection.close();
 })
