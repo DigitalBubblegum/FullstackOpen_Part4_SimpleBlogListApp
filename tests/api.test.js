@@ -73,6 +73,24 @@ test('a particular blog can be deleted',async()=>{
   const titles = blogsAtEnd.map((r) => r.title);
   expect(titles).not.toContain(blogToDelete.title);
 })
+//4.14 updating the information of an individual blog post
+test('updating the information of an individual blog post',async()=>{
+  const newBlog = {
+    title: "MongoDB world",
+    author: "MongoDB Team",
+    url: "http://mongodbworld.com",
+    likes: 20000
+  }
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToUpdate = blogsAtStart[0]
+  await api.put(`/api/blogs/${blogToUpdate.id}`).send(newBlog).expect(200)
+  const blogsAtEnd = await helper.blogsInDb()
+  console.log(blogsAtEnd);
+  // const likes = blogsAtEnd.map((r) => r.like);
+  console.log(blogsAtEnd[0].likes);
+  console.log(blogToUpdate.likes);
+  expect(blogsAtEnd[0].likes).toEqual(newBlog.likes);
+})
 afterAll(async()=>{
     await mongoose.connection.close();
 })
