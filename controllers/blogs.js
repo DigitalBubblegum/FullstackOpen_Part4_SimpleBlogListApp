@@ -18,8 +18,8 @@ blogsRouter.get('/:id',async(request,response)=>{
 //post to DB
 blogsRouter.post('/', async (request, response) => {
   const blog = new Blog(request.body);
-
-  if (blog.title===undefined||blog.author===undefined||blog.url===undefined||blog.likes===undefined) {
+  blog.likes = request.body.likes || 0
+  if (blog.title===undefined||blog.author===undefined||blog.url===undefined) {
     return response.status(400).json({error: "content missing",});
   }
       const savedBlog = await blog.save()

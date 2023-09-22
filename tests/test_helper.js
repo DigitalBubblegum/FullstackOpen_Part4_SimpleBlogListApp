@@ -15,6 +15,11 @@ const initialBlogs = [
   },
 ]
 
+const missingLikes = {
+    title: "Mongo Monkey",
+    author: "Mongo Monkey Team",
+    url: "http://mongomonkey.com",
+  }
 
 //TODO non existing ID
 
@@ -28,5 +33,6 @@ const blogsInDb = async () => {
 module.exports = {
   initialBlogs,
 //   nonExistingId,
+  missingLikes,
   blogsInDb,
 };

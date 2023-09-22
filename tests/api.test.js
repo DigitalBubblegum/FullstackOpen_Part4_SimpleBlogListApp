@@ -63,7 +63,18 @@ test('a valid blog can be added', async()=>{
   const titles = blogsAtEnd.map(r=>r.title)
   expect(titles).toContain('Learners Planet')
 })
-
+//4.11 Verify when likes is missing from the request, it will default to the value 0.
+test('Verify when likes is missing from the request, it will default to the value 0.', async() =>{
+  await api
+    .post("/api/blogs")
+    .send(helper.missingLikes)
+    .expect(201)
+    .expect("Content-Type", /application\/json/)
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
+  const titles = blogsAtEnd.map((r) => r.title);
+  expect(titles).toContain("Mongo Monkey");
+})
 //test to see if an invalid blog cannot be added to the DB via GET
 test('blog without content is not added',async()=>{
   const newBlog = {
