@@ -22,20 +22,13 @@ blogsRouter.post('/', async (request, response) => {
   if (blog.title===undefined||blog.author===undefined||blog.url===undefined||blog.likes===undefined) {
     return response.status(400).json({error: "content missing",});
   }
-    try{
       const savedBlog = await blog.save()
       response.status(201).json(savedBlog)
-    }catch(exception){
-      next(exception)
-    }
 });
 //Delete from DB
 blogsRouter.delete('/:id',async(request,response)=>{
-  try {
+  
     await Blog.findByIdAndRemove(request.params.id);
     response.status(204).end();
-  } catch (exception) {
-    next(exception);
-  }
 })
 module.exports = blogsRouter;
