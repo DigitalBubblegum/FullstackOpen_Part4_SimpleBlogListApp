@@ -33,9 +33,13 @@ test('all notes are returned',async()=>{
   expect(response.body).toHaveLength(helper.initialBlogs.length)
 },100000)
 test('a specific note is within the returned notes',async()=>{
-  const response = await api.get('/api/blogs')
-  const titles  = response.body.map(r => r.title)
-  expect(titles).toContain("MongoDB world");
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToView = blogsAtStart[0]
+  const resultBlog = await api
+    .get(`/api/blogs/${blogToView.id}`)
+    .expect(200)
+    .expect('Content-Type',/application\/json/)
+  expect(resultBlog.body).toEqual(blogToView)
 })
 //Test to see if a valid blog can be added to the DB via GET
 test('a valid blog can be added', async()=>{
