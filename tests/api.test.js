@@ -46,7 +46,7 @@ test('a specific note is within the returned notes',async()=>{
     .expect('Content-Type',/application\/json/)
   expect(resultBlog.body).toEqual(blogToView)
 })
-//Test to see if a valid blog can be added to the DB via GET
+//4.10 Test to see if a valid blog can be added to the DB via GET
 test('a valid blog can be added', async()=>{
   const newBlog = {
     title: "Learners Planet",
