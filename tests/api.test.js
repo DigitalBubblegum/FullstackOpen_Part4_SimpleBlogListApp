@@ -79,7 +79,7 @@ test('updating the information of an individual blog post',async()=>{
     title: "MongoDB world",
     author: "MongoDB Team",
     url: "http://mongodbworld.com",
-    likes: 20000
+    likes: 2000
   }
   const blogsAtStart = await helper.blogsInDb()
   const blogToUpdate = blogsAtStart[0]
