@@ -6,21 +6,20 @@ const api = supertest(app)
 const Blog = require('../models/blog')
 beforeEach(async()=>{
     await Blog.deleteMany({});
-    let blogObject = new Blog(helper.initialBlogs[0]);
-    await blogObject.save();
-    blogObject = new Blog(helper.initialBlogs[1]);
-    await blogObject.save();
-    blogObject = new Blog(helper.initialBlogs[2]);
-    await blogObject.save();
+    for (let blog of helper.initialBlogs) {
+      let blogObject = new Blog(blog);
+      await blogObject.save();
+    }
 },100000)
 test ('api returns json',
     async() =>{
+      
         await api.get('/api/blogs').expect(200).expect('Content-Type',/application\/json/)
 },100000)
-test('api returns 3 blogs',
+test('api returns 2 blogs',
     async()=>{
         const response = await api.get('/api/blogs')
-        expect(response.body).toHaveLength(3)
+        expect(response.body).toHaveLength(helper.initialBlogs.length)
 },100000)
 test('api returns 0th blog as MongoDB world',
     async()=>{

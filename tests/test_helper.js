@@ -13,12 +13,6 @@ const initialBlogs = [
     url: "http://mongodbfriends.com",
     likes: 456677,
   },
-  {
-    title: "MongoDB friends",
-    author: "MongoDB friends team",
-    url: "http://mongodbfriends.com",
-    likes: 456677,
-  },
 ]
 
 
