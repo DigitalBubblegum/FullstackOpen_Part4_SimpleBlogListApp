@@ -60,7 +60,7 @@ test('blog without content is not added',async()=>{
   const blogsAtEnd = await helper.blogsInDb()
   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
 },100000)
-//test to see if a particular blog can be deleted
+//4.13 test to see if a particular blog can be deleted
 test('a particular blog can be deleted',async()=>{
   const blogsAtStart = await helper.blogsInDb()
   const blogToDelete = blogsAtStart[0]
