@@ -4,6 +4,7 @@ const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const User = require('../models/user')
 beforeEach(async() => {
 	await Blog.deleteMany({})
 	for (let blog of helper.initialBlogs) {
@@ -90,6 +91,58 @@ test('updating the information of an individual blog post',async() => {
 	console.log(blogsAtEnd[0].likes)
 	console.log(blogToUpdate.likes)
 	expect(blogsAtEnd[0].likes).toEqual(newBlog.likes)
+})
+describe('Tests related to user api', () => {
+	beforeEach(async() => {
+		const newUser = {
+			username: 'root',
+			name: 'root',
+			password: '123456789',
+			blogs: [],
+		}
+		await User.deleteMany({})
+		let userObject = new User(newUser)
+		await userObject.save()
+	},100000)
+	test('check and see if user is returned and in json format',async() => {
+		await api.get('/api/users').expect(200).expect('Content-Type',/application\/json/)
+	},100000)
+	test('check and see if user is not created when username is less than 3 characters',async() => {
+		const invalUser = {
+			username: 'N',
+			name: 'nia',
+			password: 'dummyTest',
+			blogs: []
+		}
+		await api.post('/api/users').send(invalUser).expect(400)
+	},100000)
+	test('check and see if user is not created when password is less than 3 characters',async() => {
+		const invalUser = {
+			username: 'NearFromDN',
+			name: 'nia',
+			password: 'd',
+			blogs: []
+		}
+		await api.post('/api/users').send(invalUser).expect(400)
+	},100000)
+	test('check and see if user is created when the username is unique and password is of the valid size',async() => {
+		const valUser = {
+			username: 'Salarian',
+			name: 'Sal Larian',
+			password: '123456789',
+			blogs: [],
+		}
+		await api.post('/api/users').send(valUser).expect(201).expect('Content-Type',/application\/json/)
+	},100000)
+	test('check and see if user is not created when the username is not unique',async() => {
+		const invalUser = {
+			username: 'root',
+			name: 'root',
+			password: '123456789',
+			blogs: [],
+		}
+		await api.post('/api/users').send(invalUser).expect(400)
+	},100000)
 })
 afterAll(async() => {
 	await mongoose.connection.close()
