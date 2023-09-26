@@ -9,15 +9,15 @@ const mongoose = require('mongoose')
 
 mongoose.set('strictQuery',false)
 
-logger.info("connecting to ", config.mongoUrl);
+logger.info('connecting to ', config.mongoUrl)
 mongoose
-  .connect(config.mongoUrl)
-  .then(() => {
-    logger.info("connected to MongoDB");
-  })
-  .catch((error) => {
-    logger.error("error connecting to MongoDB:", error.message);
-  });
+	.connect(config.mongoUrl)
+	.then(() => {
+		logger.info('connected to MongoDB')
+	})
+	.catch((error) => {
+		logger.error('error connecting to MongoDB:', error.message)
+	})
 
 app.use(cors())
 app.use(express.json())
