@@ -1,8 +1,10 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const User = require('../models/user')
 //get all from DB
 blogsRouter.get('/', async (request, response) => {
-	const blogs = await Blog.find({})
+	/*4.17 listing all blogs so that the creator's user information is displayed with the blog and listing all users also displays the blogs created by each user*/
+	const blogs = await Blog.find({}).populate('user',{ username:1,name:1,id: 1 })
 	response.json(blogs)
 })
 //get by ID
@@ -17,12 +19,20 @@ blogsRouter.get('/:id',async(request,response) => {
 //post to DB
 blogsRouter.post('/', async (request, response) => {
 	const blog = new Blog(request.body)
+	const users = await User.find({})
+	const length = users.length
+	const random = Math.floor(Math.random() * (length - 0) + 0)
+	console.log(random)
+	blog.user = users[random]._id
+	const user = users[random]
 	blog.likes = request.body.likes || 0
 	if (blog.title===undefined||blog.author===undefined||blog.url===undefined) {
 		return response.status(400).json({ error: 'content missing', })
 	}
 	const savedBlog = await blog.save()
 	response.status(201).json(savedBlog)
+	user.blogs = user.blogs.concat(blog._id)
+	await user.save()
 })
 //Update in DB
 blogsRouter.put('/:id', (request,response) => {
