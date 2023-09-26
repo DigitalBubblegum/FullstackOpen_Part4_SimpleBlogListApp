@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const brcypt = require('bcrypt')
 const loginRouter = require('express').Router()
 const User = require('../models/user')
-
+//4.18 implemented token-based authentication
 loginRouter.post('/',async(request,response) => {
 	const { username,password } = request.body
 	const user = await User.findOne({ username })
@@ -16,9 +16,5 @@ loginRouter.post('/',async(request,response) => {
 	}
 	const token = jwt.sign(userForToken,process.env.SECRET,{ expiresIn: 60*60 })
 	response.status(200).send({ token,username:user.username,name:user.name })
-})
-loginRouter.get('/',async(request,response) => {
-	const users = await User.find({})
-	response.status(201).send(users)
 })
 module.exports = loginRouter
