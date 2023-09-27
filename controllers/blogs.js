@@ -1,6 +1,15 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const jwt = require('jsonwebtoken')
+const getTokenFrom = request => {
+
+	const authorization = request.get('authorization')
+	if (authorization && authorization.startsWith('Bearer ')) {
+		return authorization.replace('Bearer ', '')
+	}
+	return null
+}
 //get all from DB
 blogsRouter.get('/', async (request, response) => {
 	/*4.17 listing all blogs so that the creator's user information is displayed with the blog and listing all users also displays the blogs created by each user*/
@@ -19,15 +28,27 @@ blogsRouter.get('/:id',async(request,response) => {
 //post to DB
 blogsRouter.post('/', async (request, response) => {
 	const blog = new Blog(request.body)
+	const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+	if (!decodedToken.id) {
+		return response.status(401).json({ error: 'token invalid' })
+	}
+	/*This code here was for 4.17
 	const users = await User.find({})
 	const length = users.length
 	const random = Math.floor(Math.random() * (length - 0) + 0)
 	console.log(random)
 	blog.user = users[random]._id
-	const user = users[random]
+	const user = users[random]*/
+	//4.19 adding new blogs is only possible if a valid token is sent with the HTTP POST request. The user identified by the token is designated as the creator of the blog.
+	const user = await User.findById(decodedToken.id)
+	blog.user = user._id
 	blog.likes = request.body.likes || 0
-	if (blog.title===undefined||blog.author===undefined||blog.url===undefined) {
-		return response.status(400).json({ error: 'content missing', })
+	if (
+		blog.title === undefined ||
+    blog.author === undefined ||
+    blog.url === undefined
+	) {
+		return response.status(400).json({ error: 'content missing' })
 	}
 	const savedBlog = await blog.save()
 	response.status(201).json(savedBlog)
