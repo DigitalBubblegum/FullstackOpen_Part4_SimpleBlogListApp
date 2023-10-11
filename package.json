@@ -8,7 +8,8 @@
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
     "lint": "eslint .",
-    "start:test": "cross-env NODE_ENV=test node index.js"
+    "start:test": "cross-env NODE_ENV=test node index.js",
+    "build:ui": "rm -rf dist && cd F:/bloglist-frontend/ && npm run build && ls && cp -r dist F:/FullstackOpen_Part4_SimpleBlogListApp"
   },
   "author": "",
   "license": "MIT",
